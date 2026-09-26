@@ -2,7 +2,6 @@
 
 Backend para o projeto Dev Feed: autenticação JWT com refresh token, feed público de posts e CRUD protegido.
 
-
 ## Libraries
 
 ```
@@ -14,7 +13,6 @@ dotnet add package System.IdentityModel.Tokens.Jwt --version 8.7.0
 dotnet add package BCrypt.Net-Next --version 4.0.3
 dotnet add package Scalar.AspNetCore --version 2.*
 ```
-
 
 ## Migrations
 
@@ -29,14 +27,12 @@ A migration `InitialCreate` já está versionada em `Migrations/`. Em um clone n
 
 Só execute `dotnet ef migrations add <Nome>` após alterar entidades ou o `DbContext`.
 
-
 ## Run Project
 
 ```
 dotnet build
 dotnet run
 ```
-
 
 ## Accessing
 
@@ -45,7 +41,6 @@ API: http://localhost:5209
 OpenAPI (docs): http://localhost:5209/openapi/v1.json
 
 Scalar UI: http://localhost:5209/scalar
-
 
 ## Examples of commits
 
