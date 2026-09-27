@@ -46,7 +46,7 @@ class _PostFormViewState extends State<PostFormView> {
         title: Text(isEditing ? 'Editar Post' : 'Criar Post'),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_outlined),
           onPressed: () {
             widget.postViewModel.resetPostState();
             context.pop();

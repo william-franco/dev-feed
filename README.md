@@ -39,7 +39,7 @@ cd DevFeedBackend
 dotnet run
 ```
 
-A API sobe em `http://localhost:5209`. O banco é criado/atualizado automaticamente via EF Core migrations (`Database.Migrate()` na inicialização).
+A API REST sobe em `http://localhost:5209/api/v1`. O banco é criado/atualizado automaticamente via EF Core migrations (`Database.Migrate()` na inicialização).
 
 Para migrations, pacotes e documentação interativa (Scalar), consulte [`DevFeedBackend/README.md`](DevFeedBackend/README.md).
 
@@ -61,8 +61,8 @@ Base URL configurada em `dev_feed_app/lib/src/common/constants/api_constant.dart
 
 | Plataforma | URL |
 |------------|-----|
-| Web / Desktop / iOS | `http://localhost:5209` |
-| Android Emulator | `http://10.0.2.2:5209` |
+| Web / Desktop / iOS | `http://localhost:5209/api/v1` |
+| Android Emulator | `http://10.0.2.2:5209/api/v1` |
 
 O app consome a API REST do backend. Endpoints, autenticação e schema do banco estão documentados no [README do backend](DevFeedBackend/README.md) e na interface Scalar (`http://localhost:5209/scalar`).
 

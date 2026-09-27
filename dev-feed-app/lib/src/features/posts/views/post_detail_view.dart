@@ -33,16 +33,16 @@ class _PostDetailViewState extends State<PostDetailView> {
         title: const Text('Detalhes do Post'),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_outlined),
           onPressed: () => context.pop(),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.edit),
+            icon: const Icon(Icons.edit_outlined),
             onPressed: () => _navigateToEdit(context),
           ),
           IconButton(
-            icon: const Icon(Icons.delete),
+            icon: const Icon(Icons.delete_outlined),
             onPressed: () => _confirmDelete(context),
           ),
         ],
@@ -141,7 +141,7 @@ class _PostDetailViewState extends State<PostDetailView> {
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: () => _navigateToEdit(context),
-              icon: const Icon(Icons.edit),
+              icon: const Icon(Icons.edit_outlined),
               label: const Text('Editar Post'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -153,7 +153,7 @@ class _PostDetailViewState extends State<PostDetailView> {
             width: double.infinity,
             child: OutlinedButton.icon(
               onPressed: () => _confirmDelete(context),
-              icon: const Icon(Icons.delete, color: Colors.red),
+              icon: const Icon(Icons.delete_outlined, color: Colors.red),
               label: const Text(
                 'Excluir Post',
                 style: TextStyle(color: Colors.red),

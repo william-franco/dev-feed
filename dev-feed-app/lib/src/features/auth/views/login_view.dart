@@ -82,7 +82,7 @@ class _LoginViewState extends State<LoginView> {
         children: [
           const SizedBox(height: 32),
           Icon(
-            Icons.login_rounded,
+            Icons.login_outlined,
             size: 80,
             color: Theme.of(context).colorScheme.primary,
           ),

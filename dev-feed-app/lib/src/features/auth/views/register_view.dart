@@ -41,7 +41,7 @@ class _RegisterViewState extends State<RegisterView> {
         title: const Text('Criar Conta'),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_outlined),
           onPressed: () {
             // widget.authViewModel.resetRegisterState();
             context.pop();
@@ -87,7 +87,7 @@ class _RegisterViewState extends State<RegisterView> {
         children: [
           const SizedBox(height: 24),
           Icon(
-            Icons.person_add_rounded,
+            Icons.person_add_outlined,
             size: 80,
             color: Theme.of(context).colorScheme.primary,
           ),

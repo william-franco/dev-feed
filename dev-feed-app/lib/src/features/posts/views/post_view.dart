@@ -35,6 +35,11 @@ class _PostViewState extends State<PostView> {
         centerTitle: true,
         actions: [
           IconButton(
+            tooltip: 'Atualizar',
+            icon: const Icon(Icons.refresh_outlined),
+            onPressed: () => widget.postViewModel.getAllPosts(),
+          ),
+          IconButton(
             icon: const Icon(Icons.settings_outlined),
             onPressed: () => context.push(SettingRoutes.setting),
           ),
@@ -60,7 +65,7 @@ class _PostViewState extends State<PostView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _navigateToCreatePost(context),
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add_outlined),
       ),
     );
   }
@@ -207,7 +212,7 @@ class _PostCard extends StatelessWidget {
                         value: 'edit',
                         child: Row(
                           children: [
-                            Icon(Icons.edit, size: 20),
+                            Icon(Icons.edit_outlined, size: 20),
                             SizedBox(width: 8),
                             Text('Editar'),
                           ],
@@ -217,7 +222,7 @@ class _PostCard extends StatelessWidget {
                         value: 'delete',
                         child: Row(
                           children: [
-                            Icon(Icons.delete, size: 20, color: Colors.red),
+                            Icon(Icons.delete_outlined, size: 20, color: Colors.red),
                             SizedBox(width: 8),
                             Text(
                               'Excluir',

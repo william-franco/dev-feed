@@ -23,6 +23,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                if (HttpMethods.IsOptions(context.Request.Method))
+                {
+                    context.NoResult();
+                }
+                return Task.CompletedTask;
+            }
+        };
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -41,7 +52,9 @@ builder.Services.AddAuthorization();
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
-        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+        policy.SetIsOriginAllowed(_ => true)
+            .AllowAnyHeader()
+            .AllowAnyMethod());
 });
 
 builder.Services.AddOpenApi();
@@ -64,9 +77,11 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
+var apiV1 = app.MapGroup("/api/v1");
+
 // --- Auth ---
 
-app.MapPost("/auth/register", async (RegisterRequest request, AppDbContext db) =>
+apiV1.MapPost("/auth/register", async (RegisterRequest request, AppDbContext db) =>
 {
     if (string.IsNullOrWhiteSpace(request.Name) ||
         string.IsNullOrWhiteSpace(request.Email) ||
@@ -99,7 +114,7 @@ app.MapPost("/auth/register", async (RegisterRequest request, AppDbContext db) =
 .WithTags("Auth")
 .WithName("Register");
 
-app.MapPost("/auth/login", async (LoginRequest request, AppDbContext db) =>
+apiV1.MapPost("/auth/login", async (LoginRequest request, AppDbContext db) =>
 {
     if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
     {
@@ -119,7 +134,7 @@ app.MapPost("/auth/login", async (LoginRequest request, AppDbContext db) =>
 .WithTags("Auth")
 .WithName("Login");
 
-app.MapPost("/auth/refresh", async (RefreshRequest request, AppDbContext db) =>
+apiV1.MapPost("/auth/refresh", async (RefreshRequest request, AppDbContext db) =>
 {
     if (string.IsNullOrWhiteSpace(request.RefreshToken))
     {
@@ -144,7 +159,7 @@ app.MapPost("/auth/refresh", async (RefreshRequest request, AppDbContext db) =>
 .WithTags("Auth")
 .WithName("Refresh");
 
-app.MapPost("/auth/logout", async (RefreshRequest request, AppDbContext db) =>
+apiV1.MapPost("/auth/logout", async (RefreshRequest request, AppDbContext db) =>
 {
     if (string.IsNullOrWhiteSpace(request.RefreshToken))
     {
@@ -163,7 +178,7 @@ app.MapPost("/auth/logout", async (RefreshRequest request, AppDbContext db) =>
 .WithTags("Auth")
 .WithName("Logout");
 
-app.MapGet("/auth/me", async (ClaimsPrincipal user, AppDbContext db) =>
+apiV1.MapGet("/auth/me", async (ClaimsPrincipal user, AppDbContext db) =>
 {
     var userId = GetUserId(user);
     if (userId is null) return Results.Unauthorized();
@@ -179,7 +194,7 @@ app.MapGet("/auth/me", async (ClaimsPrincipal user, AppDbContext db) =>
 
 // --- Posts (public read) ---
 
-app.MapGet("/posts", async (AppDbContext db) =>
+apiV1.MapGet("/posts", async (AppDbContext db) =>
 {
     var posts = await db.Posts
         .Include(p => p.Author)
@@ -191,7 +206,7 @@ app.MapGet("/posts", async (AppDbContext db) =>
 .WithTags("Posts")
 .WithName("ListPosts");
 
-app.MapGet("/posts/{id:int}", async (int id, AppDbContext db) =>
+apiV1.MapGet("/posts/{id:int}", async (int id, AppDbContext db) =>
 {
     var post = await db.Posts.Include(p => p.Author).FirstOrDefaultAsync(p => p.Id == id);
     return post is null ? Results.NotFound() : Results.Ok(PostDto.FromEntity(post));
@@ -201,7 +216,7 @@ app.MapGet("/posts/{id:int}", async (int id, AppDbContext db) =>
 
 // --- Posts (protected write) ---
 
-app.MapPost("/posts", async (PostRequest request, ClaimsPrincipal user, AppDbContext db) =>
+apiV1.MapPost("/posts", async (PostRequest request, ClaimsPrincipal user, AppDbContext db) =>
 {
     var userId = GetUserId(user);
     if (userId is null) return Results.Unauthorized();
@@ -225,13 +240,13 @@ app.MapPost("/posts", async (PostRequest request, ClaimsPrincipal user, AppDbCon
     await db.SaveChangesAsync();
     await db.Entry(post).Reference(p => p.Author).LoadAsync();
 
-    return Results.Created($"/posts/{post.Id}", PostDto.FromEntity(post));
+    return Results.Created($"/api/v1/posts/{post.Id}", PostDto.FromEntity(post));
 })
 .RequireAuthorization()
 .WithTags("Posts")
 .WithName("CreatePost");
 
-app.MapPut("/posts/{id:int}", async (int id, PostUpdateRequest request, ClaimsPrincipal user, AppDbContext db) =>
+apiV1.MapPut("/posts/{id:int}", async (int id, PostUpdateRequest request, ClaimsPrincipal user, AppDbContext db) =>
 {
     var userId = GetUserId(user);
     if (userId is null) return Results.Unauthorized();
@@ -255,7 +270,7 @@ app.MapPut("/posts/{id:int}", async (int id, PostUpdateRequest request, ClaimsPr
 .WithTags("Posts")
 .WithName("UpdatePost");
 
-app.MapDelete("/posts/{id:int}", async (int id, ClaimsPrincipal user, AppDbContext db) =>
+apiV1.MapDelete("/posts/{id:int}", async (int id, ClaimsPrincipal user, AppDbContext db) =>
 {
     var userId = GetUserId(user);
     if (userId is null) return Results.Unauthorized();
