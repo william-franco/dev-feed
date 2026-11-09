@@ -154,7 +154,9 @@ class PostRepositoryImpl implements PostRepository {
         return ErrorResult(error: PostException('Dispositivo sem conexão.'));
       }
 
-      final result = await httpService.deleteData(path: '${ApiConstant.posts}/$id');
+      final result = await httpService.deleteData(
+        path: '${ApiConstant.posts}/$id',
+      );
 
       if (result.statusCode == 200 && result.data != null) {
         return SuccessResult(

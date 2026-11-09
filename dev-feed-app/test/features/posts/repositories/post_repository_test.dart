@@ -39,28 +39,26 @@ void main() {
 
   test('findAllPosts returns list on 200', () async {
     when(mockConnection.checkConnection()).thenAnswer((_) async {});
-    when(mockHttp.getData(path: ApiConstant.posts)).thenAnswer(
-      (_) async => (statusCode: 200, data: [postJson], error: null),
-    );
+    when(
+      mockHttp.getData(path: ApiConstant.posts),
+    ).thenAnswer((_) async => (statusCode: 200, data: [postJson], error: null));
 
     final result = await repository.findAllPosts();
 
     expect(result, isA<SuccessResult<List<PostModel>, PostException>>());
-    final posts = (result as SuccessResult<List<PostModel>, PostException>).value;
+    final posts =
+        (result as SuccessResult<List<PostModel>, PostException>).value;
     expect(posts, hasLength(1));
     expect(posts.first.title, 'Title');
   });
 
   test('createPost sends coordinates from location service', () async {
     when(mockConnection.checkConnection()).thenAnswer((_) async {});
-    when(mockLocation.getCurrentLocation()).thenAnswer(
-      (_) async => LocationPosition(latitude: 10, longitude: 20),
-    );
+    when(mockLocation.getCurrentLocation())
+        .thenAnswer((_) async => LocationPosition(latitude: 10, longitude: 20));
     when(
       mockHttp.postData(path: ApiConstant.posts, body: anyNamed('body')),
-    ).thenAnswer(
-      (_) async => (statusCode: 201, data: postJson, error: null),
-    );
+    ).thenAnswer((_) async => (statusCode: 201, data: postJson, error: null));
 
     final result = await repository.createPost(
       title: 'Title',
@@ -71,10 +69,7 @@ void main() {
     verify(
       mockHttp.postData(
         path: ApiConstant.posts,
-        body: argThat(
-          containsPair('latitude', 10.0),
-          named: 'body',
-        ),
+        body: argThat(containsPair('latitude', 10.0), named: 'body'),
       ),
     ).called(1);
   });
@@ -84,23 +79,15 @@ void main() {
     when(mockLocation.getCurrentLocation()).thenAnswer((_) async => null);
     when(
       mockHttp.postData(path: ApiConstant.posts, body: anyNamed('body')),
-    ).thenAnswer(
-      (_) async => (statusCode: 201, data: postJson, error: null),
-    );
+    ).thenAnswer((_) async => (statusCode: 201, data: postJson, error: null));
 
-    await repository.createPost(
-      title: 'Title',
-      content: 'Content body here',
-    );
+    await repository.createPost(title: 'Title', content: 'Content body here');
 
     verify(
       mockHttp.postData(
         path: ApiConstant.posts,
         body: argThat(
-          allOf(
-            containsPair('latitude', 0.0),
-            containsPair('longitude', 0.0),
-          ),
+          allOf(containsPair('latitude', 0.0), containsPair('longitude', 0.0)),
           named: 'body',
         ),
       ),

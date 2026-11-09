@@ -50,9 +50,8 @@ void main() {
   });
 
   test('getAllPosts success', () async {
-    when(mockRepository.findAllPosts()).thenAnswer(
-      (_) async => SuccessResult(value: [samplePost]),
-    );
+    when(mockRepository.findAllPosts())
+        .thenAnswer((_) async => SuccessResult(value: [samplePost]));
 
     await viewModel.getAllPosts();
 
@@ -69,9 +68,8 @@ void main() {
         content: anyNamed('content'),
       ),
     ).thenAnswer((_) async => SuccessResult(value: samplePost));
-    when(mockRepository.findAllPosts()).thenAnswer(
-      (_) async => SuccessResult(value: [samplePost]),
-    );
+    when(mockRepository.findAllPosts())
+        .thenAnswer((_) async => SuccessResult(value: [samplePost]));
 
     await viewModel.createPost(title: 'T', content: 'Content long enough');
 

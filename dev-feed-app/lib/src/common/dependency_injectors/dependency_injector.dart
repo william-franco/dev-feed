@@ -2,6 +2,7 @@ import 'package:dev_feed_app/src/common/services/connection_service.dart';
 import 'package:dev_feed_app/src/common/services/http_service.dart';
 import 'package:dev_feed_app/src/common/services/location_service.dart';
 import 'package:dev_feed_app/src/common/services/storage_service.dart';
+import 'package:dev_feed_app/src/common/services/url_launcher_service.dart';
 import 'package:dev_feed_app/src/features/auth/repositories/auth_repository.dart';
 import 'package:dev_feed_app/src/features/auth/view_models/auth_session_view_model.dart';
 import 'package:dev_feed_app/src/features/auth/view_models/login_view_model.dart';
@@ -15,6 +16,9 @@ import 'package:get_it/get_it.dart';
 final locator = GetIt.instance;
 
 void dependencyInjector() {
+  locator.registerLazySingleton<UrlLauncherService>(
+    () => UrlLauncherServiceImpl(),
+  );
   _registerServices();
   _registerAuth();
   _registerPosts();
@@ -66,7 +70,10 @@ void _registerPosts() {
 
 void _registerSettings() {
   locator.registerLazySingleton<SettingRepository>(
-    () => SettingRepositoryImpl(storageService: locator<StorageService>()),
+    () => SettingRepositoryImpl(
+      storageService: locator<StorageService>(),
+      urlLauncherService: locator<UrlLauncherService>(),
+    ),
   );
   locator.registerLazySingleton<SettingViewModel>(
     () => SettingViewModelImpl(settingRepository: locator<SettingRepository>()),
@@ -75,9 +82,7 @@ void _registerSettings() {
 
 Future<void> initDependencies() async {
   await locator<StorageService>().initStorage();
-  final bootTasks = <Future<void>>[
-    locator<SettingViewModel>().getTheme(),
-  ];
+  final bootTasks = <Future<void>>[locator<SettingViewModel>().getTheme()];
   if (!skipBootLocationCheck) {
     bootTasks.add(locator<LocationService>().checkLocation());
   }

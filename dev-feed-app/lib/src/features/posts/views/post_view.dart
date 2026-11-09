@@ -222,7 +222,11 @@ class _PostCard extends StatelessWidget {
                         value: 'delete',
                         child: Row(
                           children: [
-                            Icon(Icons.delete_outlined, size: 20, color: Colors.red),
+                            Icon(
+                              Icons.delete_outlined,
+                              size: 20,
+                              color: Colors.red,
+                            ),
                             SizedBox(width: 8),
                             Text(
                               'Excluir',
