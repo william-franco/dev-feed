@@ -1,7 +1,7 @@
 import 'package:dev_feed_app/src/common/state_management/state_management.dart';
 import 'package:dev_feed_app/src/features/settings/models/setting_model.dart';
 import 'package:dev_feed_app/src/features/settings/view_models/setting_view_model.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 class SettingView extends StatelessWidget {

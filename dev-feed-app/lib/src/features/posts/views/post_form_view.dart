@@ -4,7 +4,7 @@ import 'package:dev_feed_app/src/features/posts/exceptions/post_exception.dart';
 import 'package:dev_feed_app/src/features/posts/models/post_model.dart';
 import 'package:dev_feed_app/src/features/posts/models/post_screen_state.dart';
 import 'package:dev_feed_app/src/features/posts/view_models/post_view_model.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'package:go_router/go_router.dart';
 

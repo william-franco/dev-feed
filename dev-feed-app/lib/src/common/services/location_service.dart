@@ -80,11 +80,10 @@ class LocationServiceImpl implements LocationService {
 
   Future<LocationPosition?> _readLocationData() async {
     final data = await _location.getLocation();
-    if (data.latitude == null || data.longitude == null) return null;
 
     return LocationPosition(
-      latitude: data.latitude!,
-      longitude: data.longitude!,
+      latitude: data.latitude,
+      longitude: data.longitude,
     );
   }
 
